@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Welcome to Brew Bliss Café – Where warmth meets flavor. Explore our handcrafted menu, cozy ambiance, and story.">
+    <title>Brew Bliss Café – Taste the Joy in Every Sip</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="script.js" defer></script>
+    <style>
+        /* Add styles for login/logout button */
+        .auth-btn {
+            background: #8B4513;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .auth-btn:hover {
+            background: #6B2C0F;
+            transform: translateY(-2px);
+        }
+
+        .auth-btn.logout {
+            background: #ff4444;
+        }
+
+        .auth-btn.logout:hover {
+            background: #ff2222;
+        }
+
+        /* Add styles for location permission message */
+        .location-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .location-message.error {
+            border-left: 4px solid #ff4444;
+        }
+
+        .location-message.success {
+            border-left: 4px solid #4CAF50;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #8B4513;
+            outline: none;
+            box-shadow: 0 0 5px rgba(139, 69, 19, 0.2);
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .order-details {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .order-details h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-total {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #ddd;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .payment-method {
+            margin: 30px 0;
+        }
+
+        .payment-method h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .payment-options {
+            display: flex;
+            gap: 20px;
+        }
+
+        .payment-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .confirm-order-btn {
+            background: #8B4513;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-order-btn:hover {
+            background: #6B2C0F;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        /* Add these styles for cart items */
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .cart-item-price {
+            color: #8B4513;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            background: #f0f0f0;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .quantity-value {
+            font-weight: 500;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .remove-item {
+            background: #ff4444;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .remove-item:hover {
+            background: #ff2222;
+        }
+
+        /* Add these styles to ensure images display properly */
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-right: 15px;
+            background: #f5f5f5;
+            flex-shrink: 0;
+        }
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .cart-item-details {
+            flex: 1;
+            min-width: 0;
+        }
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cart-item-price {
+            color: #8B4513;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .quantity-btn {
+            background: #f0f0f0;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .quantity-btn:hover {
+            background: #e0e0e0;
+        }
+        .quantity-value {
+            font-weight: 500;
+            min-width: 30px;
+            text-align: center;
+        }
+        .remove-item {
+            background: #ff4444;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .remove-item:hover {
+            background: #ff2222;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>Brew Bliss Café</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="order-history.html" id="orderHistoryLink" style="display: none;">Order History</a></li>
+                <li><a href="#" id="authButton" class="auth-btn">Login</a></li>
+            </ul>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Add location message container -->
+    <div id="locationMessage" class="location-message"></div>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Sip. Relax. Repeat.</h1>
+            <p>Discover your favorite blend at Brew Bliss Café</p>
+            <a href="#menu" class="cta-button">See Our Menu</a>
+        </div>
+    </section>
+
+    <section id="menu" class="menu">
+        <h2>Our Menu</h2>
+        <div class="menu-categories">
+            <div class="category">
+                <h3>Beverages</h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <img src="https://www.sharmispassions.com/wp-content/uploads/2012/07/espresso-coffee-recipe04.jpg" alt="Espresso">
+                        <h4>Espresso</h4>
+                        <p>Rich and bold coffee shot</p>
+                        <span class="price">₹120</span>
+                        <button class="add-to-cart" data-name="Espresso" data-price="120" data-img="https://www.sharmispassions.com/wp-content/uploads/2012/07/espresso-coffee-recipe04.jpg">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://static.vecteezy.com/system/resources/thumbnails/049/632/997/small_2x/heart-shaped-latte-art-in-a-white-cup-with-coffee-beans-isolated-on-wooden-table-side-view-of-taiwan-baked-food-photo.jpg" alt="Latte">
+                        <h4>Latte</h4>
+                        <p>Smooth espresso with steamed milk</p>
+                        <span class="price">₹150</span>
+                        <button class="add-to-cart" data-name="Latte" data-price="150" data-img="https://static.vecteezy.com/system/resources/thumbnails/049/632/997/small_2x/heart-shaped-latte-art-in-a-white-cup-with-coffee-beans-isolated-on-wooden-table-side-view-of-taiwan-baked-food-photo.jpg">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Cappuccino">
+                        <h4>Cappuccino</h4>
+                        <p>Perfect balance of espresso and foam</p>
+                        <span class="price">₹140</span>
+                        <button class="add-to-cart" data-name="Cappuccino" data-price="140" data-img="https://images.unsplash.com/photo-1572442388796-11668a67e53d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://t3.ftcdn.net/jpg/03/16/01/48/360_F_316014817_EC1KN7mAD86ALYhhwGUUeSsQoJIVMtfQ.jpg" alt="Cold Brew">
+                        <h4>Cold Brew</h4>
+                        <p>Slow-steeped for 24 hours</p>
+                        <span class="price">₹160</span>
+                        <button class="add-to-cart" data-name="Cold Brew" data-price="160" data-img="https://t3.ftcdn.net/jpg/03/16/01/48/360_F_316014817_EC1KN7mAD86ALYhhwGUUeSsQoJIVMtfQ.jpg">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://wp.shottbeverages.com/wp-content/uploads/2021/06/decadent-hot-chocolate-img-1.jpg" alt="Hot Chocolate">
+                        <h4>Hot Chocolate</h4>
+                        <p>Rich and creamy chocolate delight</p>
+                        <span class="price">₹130</span>
+                        <button class="add-to-cart" data-name="Hot Chocolate" data-price="130" data-img="https://wp.shottbeverages.com/wp-content/uploads/2021/06/decadent-hot-chocolate-img-1.jpg">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://img.freepik.com/premium-photo/iced-coffee-roasted-coffee-wood-table_36078-57.jpg?semt=ais_hybrid&w=740" alt="Iced Coffee">
+                        <h4>Iced Coffee</h4>
+                        <p>Chilled coffee with milk</p>
+                        <span class="price">₹140</span>
+                        <button class="add-to-cart" data-name="Iced Coffee" data-price="140" data-img="https://img.freepik.com/premium-photo/iced-coffee-roasted-coffee-wood-table_36078-57.jpg?semt=ais_hybrid&w=740">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMnSqM2sIKgQkPBjUA2-D88KJ5U2rxXgcNWA&s" alt="Mocha">
+                        <h4>Mocha</h4>
+                        <p>Espresso with chocolate and milk</p>
+                        <span class="price">₹160</span>
+                        <button class="add-to-cart" data-name="Mocha" data-price="160" data-img="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMnSqM2sIKgQkPBjUA2-D88KJ5U2rxXgcNWA&s">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://ootymade.com/cdn/shop/products/407-4078365_oat-milk-chai-tea-latte-recipe-with-truva.jpg?v=1627304277&width=1445" alt="Tea">
+                        <h4>Special Tea</h4>
+                        <p>Premium tea selection</p>
+                        <span class="price">₹100</span>
+                        <button class="add-to-cart" data-name="Special Tea" data-price="100" data-img="https://ootymade.com/cdn/shop/products/407-4078365_oat-milk-chai-tea-latte-recipe-with-truva.jpg?v=1627304277&width=1445">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category">
+                <h3>Breakfast</h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <img src="https://images.immediate.co.uk/production/volatile/sites/30/2020/08/avocado-on-toast-f425165.jpg?quality=90&resize=500,454" alt="Avocado Toast">
+                        <h4>Avocado Toast</h4>
+                        <p>Fresh avocado on artisan bread</p>
+                        <span class="price">₹200</span>
+                        <button class="add-to-cart" data-name="Avocado Toast" data-price="200" data-img="https://images.immediate.co.uk/production/volatile/sites/30/2020/08/avocado-on-toast-f425165.jpg?quality=90&resize=500,454">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://media02.stockfood.com/largepreviews/MjE1NjI3NjM=/00695573-Veggie-Omelet-with-White-Toast-on-a-White-Plate.jpg" alt="Omelette">
+                        <h4>Omelette with Bread</h4>
+                        <p>Fluffy omelette with fresh herbs</p>
+                        <span class="price">₹180</span>
+                        <button class="add-to-cart" data-name="Omelette with Bread" data-price="180" data-img="https://media02.stockfood.com/largepreviews/MjE1NjI3NjM=/00695573-Veggie-Omelet-with-White-Toast-on-a-White-Plate.jpg">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://www.acouplecooks.com/wp-content/uploads/2024/08/Brown-Butter-Pancakes-0002.jpg" alt="Pancakes">
+                        <h4>Pancakes with Maple Syrup</h4>
+                        <p>Fluffy pancakes with maple syrup</p>
+                        <span class="price">₹220</span>
+                        <button class="add-to-cart" data-name="Pancakes with Maple Syrup" data-price="220" data-img="https://www.acouplecooks.com/wp-content/uploads/2024/08/Brown-Butter-Pancakes-0002.jpg">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrEClub_i4A4Z4Ma5f4A9WPk44S5h7gMMYDw&s" alt="Waffles">
+                        <h4>Waffles & Berries</h4>
+                        <p>Crispy waffles with fresh berries</p>
+                        <span class="price">₹240</span>
+                        <button class="add-to-cart" data-name="Waffles & Berries" data-price="240" data-img="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrEClub_i4A4Z4Ma5f4A9WPk44S5h7gMMYDw&s">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcIFmKSdDjQnT59g4SBeA3drvHeQivpoOAbg&s" alt="Breakfast Sandwich">
+                        <h4>Breakfast Sandwich</h4>
+                        <p>Egg, cheese, and bacon on toast</p>
+                        <span class="price">₹190</span>
+                        <button class="add-to-cart" data-name="Breakfast Sandwich" data-price="190" data-img="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcIFmKSdDjQnT59g4SBeA3drvHeQivpoOAbg&s">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSR7pb_ggp5di2QJWh1p4IpFwADu9G6vUXkaQ&s" alt="Granola Bowl">
+                        <h4>Granola Bowl</h4>
+                        <p>Fresh fruits with yogurt and granola</p>
+                        <span class="price">₹170</span>
+                        <button class="add-to-cart" data-name="Granola Bowl" data-price="170" data-img="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSR7pb_ggp5di2QJWh1p4IpFwADu9G6vUXkaQ&s">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category">
+                <h3>Pastries & Desserts</h3>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <img src="https://www.rainbownourishments.com/wp-content/uploads/2024/02/vegan-chocolate-muffins-1.jpg" alt="Chocolate Muffin">
+                        <h4>Chocolate Muffin</h4>
+                        <p>Rich chocolate muffin</p>
+                        <span class="price">₹90</span>
+                        <button class="add-to-cart" data-name="Chocolate Muffin" data-price="90" data-img="https://www.rainbownourishments.com/wp-content/uploads/2024/02/vegan-chocolate-muffins-1.jpg">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://theobroma.in/cdn/shop/files/HIGHRESBlueberryCheesecake-Square_grande.jpg?v=1711180961" alt="Cheesecake">
+                        <h4>Blueberry Cheesecake</h4>
+                        <p>Creamy cheesecake with blueberries</p>
+                        <span class="price">₹160</span>
+                        <button class="add-to-cart" data-name="Blueberry Cheesecake" data-price="160" data-img="https://theobroma.in/cdn/shop/files/HIGHRESBlueberryCheesecake-Square_grande.jpg?v=1711180961">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://sarahsvegankitchen.com/wp-content/uploads/2024/05/Vegan-Croissants-1.jpg" alt="Croissants">
+                        <h4>Croissants</h4>
+                        <p>Buttery and flaky</p>
+                        <span class="price">₹100</span>
+                        <button class="add-to-cart" data-name="Croissants" data-price="100" data-img="https://sarahsvegankitchen.com/wp-content/uploads/2024/05/Vegan-Croissants-1.jpg">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://staticcookist.akamaized.net/wp-content/uploads/sites/22/2024/09/THUMB-VIDEO-2_rev1-56.jpeg?im=Resize,width=742;" alt="Tiramisu">
+                        <h4>Tiramisu</h4>
+                        <p>Classic Italian dessert</p>
+                        <span class="price">₹180</span>
+                        <button class="add-to-cart" data-name="Tiramisu" data-price="180" data-img="https://staticcookist.akamaized.net/wp-content/uploads/sites/22/2024/09/THUMB-VIDEO-2_rev1-56.jpeg?im=Resize,width=742;">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://mygiftstory.in/wp-content/uploads/2022/11/Heavy-Chocolate-Blackforest-Cake-2.webp" alt="Chocolate Cake">
+                        <h4>Chocolate Cake</h4>
+                        <p>Rich chocolate cake with ganache</p>
+                        <span class="price">₹150</span>
+                        <button class="add-to-cart" data-name="Chocolate Cake" data-price="150" data-img="https://mygiftstory.in/wp-content/uploads/2022/11/Heavy-Chocolate-Blackforest-Cake-2.webp">Add to Cart</button>
+                    </div>
+                    <div class="menu-item">
+                        <img src="https://chelsweets.com/wp-content/uploads/2022/04/chocolate-macarons-stacked-v3.jpg.webp" alt="Macarons">
+                        <h4>Macarons</h4>
+                        <p>French almond cookies</p>
+                        <span class="price">₹120</span>
+                        <button class="add-to-cart" data-name="Macarons" data-price="120" data-img="https://chelsweets.com/wp-content/uploads/2022/04/chocolate-macarons-stacked-v3.jpg.webp">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cart" class="cart-section">
+        <h2>Your Cart</h2>
+        <div class="cart-container">
+            <div class="cart-items">
+                <!-- Cart items will be dynamically added here -->
+            </div>
+            <div class="cart-summary">
+                <div class="order-number">
+                    <p>Order #: <span id="orderNumber"></span></p>
+                </div>
+                <div class="total-items">
+                    <p>Total Items: <span id="totalItems">0</span></p>
+                </div>
+                <div class="total-amount">
+                    <p>Total Amount: ₹<span id="totalAmount">0</span></p>
+                </div>
+                <button id="placeOrder" class="place-order-btn">Place Order</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="order-history" class="order-history">
+        <h2>Order History</h2>
+        <div class="order-history-container">
+            <div class="order-list">
+                <!-- Order history will be dynamically added here -->
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="about-content">
+            <h2>Our Story</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>Brew Bliss Café was established in 2021 with a simple dream: to create a space where warmth meets flavor. Our journey began with a passion for serving the perfect cup of coffee and creating a welcoming environment for our community.</p>
+                    <p>We believe in using only the finest organic coffee beans, practicing artisan baking techniques, and maintaining a calm, inviting space where everyone feels at home. Our commitment to quality and community has made us a beloved spot in Mumbai.</p>
+                    <blockquote>"A good day starts with good coffee and kind people."</blockquote>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Our Café">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="gallery">
+        <h2>Gallery</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzh8fGNhZmV8ZW58MHx8MHx8fDA%3D" alt="Café Interior">
+            </div>
+            <div class="gallery-item">
+                <img src="https://img.freepik.com/premium-photo/barista-makes-coffee-customers-cafe-restaurant_124463-4951.jpg?semt=ais_hybrid&w=740" alt="Coffee Art">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1559305616-3f99cd43e353?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjN8fGNhZmV8ZW58MHx8MHx8fDA%3D" alt="Food Presentation">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGNhZmV8ZW58MHx8MHx8fDA%3D" alt="Café Ambience">
+            </div>
+            <div class="gallery-item">
+                <img src="https://media.istockphoto.com/id/1400194993/photo/cappuccino-art.jpg?s=612x612&w=0&k=20&c=_nYOcyQ15cYEeUYgUzkC5qG946nkCwU06NiWKt1s8SE=" alt="Coffee Making">
+            </div>
+            <div class="gallery-item">
+                <img src="https://m.media-amazon.com/images/I/61IHLDjNYoL._AC_UF1000,1000_QL80_.jpg" alt="Café Exterior">
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>Get in Touch</h2>
+        <div class="contact-container">
+            <div class="contact-info">
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>Brew Bliss Café, MG Road, Mumbai, India</p>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <p>+91 98765 43210</p>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <p>hello@brewblisscafe.com</p>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-clock"></i>
+                    <p>Mon – Sun: 8:00 AM to 10:00 PM</p>
+                </div>
+            </div>
+            <form class="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#menu">Menu</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <p>&copy; 2025 Brew Bliss Café. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const burger = document.querySelector('.burger');
+        const nav = document.querySelector('.nav-links');
+        const navLinks = document.querySelectorAll('.nav-links li');
+
+        burger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            burger.classList.toggle('toggle');
+        });
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                    if (nav.classList.contains('active')) {
+                        nav.classList.remove('active');
+                        burger.classList.remove('toggle');
+                    }
+                }
+            });
+        });
+
+        // Header Scroll Effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            header.classList.toggle('scrolled', window.scrollY > 0);
+        });
+
+        // Check login state on page load
+        function checkLoginState() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authButton = document.getElementById('authButton');
+            
+            if (currentUser) {
+                authButton.textContent = 'Logout';
+                authButton.classList.add('logout');
+                authButton.href = 'login.html';
+                authButton.onclick = function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'login.html';
+                };
+            } else {
+                authButton.textContent = 'Login';
+                authButton.classList.remove('logout');
+                authButton.href = 'login.html';
+                authButton.onclick = null;
+            }
+        }
+
+        // Show location message
+        function showLocationMessage(message, type) {
+            const messageDiv = document.getElementById('locationMessage');
+            messageDiv.textContent = message;
+            messageDiv.className = `location-message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Add location permission request on page load
+        function requestLocationPermission() {
+            // Check if we already have permission
+            const hasLocationPermission = localStorage.getItem('locationPermission');
+            if (hasLocationPermission === 'granted') {
+                return; // Skip if already granted
+            }
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        localStorage.setItem('userLocation', JSON.stringify({
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                            timestamp: new Date().getTime()
+                        }));
+                        // Store that permission was granted
+                        localStorage.setItem('locationPermission', 'granted');
+                        showLocationMessage('Location access granted!', 'success');
+                    },
+                    (error) => {
+                        // Store that permission was denied
+                        localStorage.setItem('locationPermission', 'denied');
+                        showLocationMessage('Please allow location access for better service', 'error');
+                    }
+                );
+            }
+        }
+
+        // Global cart management with dual storage
+        const CartManager = {
+            getCart: function() {
+                try {
+                    // Try sessionStorage first
+                    let cartData = sessionStorage.getItem('cart');
+                    if (!cartData) {
+                        // If not in sessionStorage, try localStorage
+                        cartData = localStorage.getItem('cart');
+                        if (cartData) {
+                            // If found in localStorage, copy to sessionStorage
+                            sessionStorage.setItem('cart', cartData);
+                        }
+                    }
+                    return cartData ? JSON.parse(cartData) : [];
+                } catch (error) {
+                    console.error('Error getting cart:', error);
+                    return [];
+                }
+            },
+
+            saveCart: function(cart) {
+                try {
+                    // Save to both storages
+                    const cartData = JSON.stringify(cart);
+                    sessionStorage.setItem('cart', cartData);
+                    localStorage.setItem('cart', cartData);
+                    return true;
+                } catch (error) {
+                    console.error('Error saving cart:', error);
+                    return false;
+                }
+            },
+
+            addItem: function(item) {
+                const cart = this.getCart();
+                const existingItem = cart.find(i => i.name === item.name);
+                
+                if (existingItem) {
+                    existingItem.quantity = (existingItem.quantity || 1) + 1;
+                } else {
+                    cart.push({
+                        ...item,
+                        quantity: 1
+                    });
+                }
+                
+                this.saveCart(cart);
+                return cart;
+            },
+
+            updateItem: function(index, quantity) {
+                const cart = this.getCart();
+                if (cart[index]) {
+                    if (quantity <= 0) {
+                        cart.splice(index, 1);
+                    } else {
+                        cart[index].quantity = quantity;
+                    }
+                    this.saveCart(cart);
+                }
+                return cart;
+            },
+
+            removeItem: function(index) {
+                const cart = this.getCart();
+                cart.splice(index, 1);
+                this.saveCart(cart);
+                return cart;
+            },
+
+            clearCart: function() {
+                this.saveCart([]);
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginState();
+            loadHomeOrderHistory();
+            
+            // Add a small delay before initializing cart display
+            setTimeout(() => {
+                updateCartDisplay();
+            }, 100);
+            
+            // Add click handlers for all "Add to Cart" buttons
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.onclick = function() {
+                    addToCart(this);
+                };
+            });
+
+            // Place Order button
+            document.getElementById('placeOrder').onclick = function() {
+                const cart = CartManager.getCart();
+                const validCart = cart.filter(item => item && item.name && item.price);
+                
+                if (!Array.isArray(validCart) || validCart.length === 0) {
+                    showLocationMessage('Your cart is empty!', 'error');
+                    return;
+                }
+                // Ensure cart is saved before navigation
+                CartManager.saveCart(validCart);
+                window.location.href = 'delivery.html';
+            };
+
+            // Add event listener for page visibility
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'visible') {
+                    setTimeout(() => {
+                        updateCartDisplay();
+                        loadHomeOrderHistory();
+                    }, 100);
+                }
+            });
+
+            // Show/hide order history link based on login status
+            updateOrderHistoryLink();
+        });
+
+        // Update cart display function
+        function updateCartDisplay() {
+            const cart = CartManager.getCart();
+            const cartItemsDiv = document.querySelector('.cart-items');
+            const totalItemsSpan = document.getElementById('totalItems');
+            const totalAmountSpan = document.getElementById('totalAmount');
+            
+            // Clear previous items
+            cartItemsDiv.innerHTML = '';
+            let totalItems = 0;
+            let totalAmount = 0;
+
+            // Validate cart data
+            if (!Array.isArray(cart) || cart.length === 0) {
+                cartItemsDiv.innerHTML = '<div class="empty-cart-message">Your cart is empty</div>';
+                totalItemsSpan.textContent = '0';
+                totalAmountSpan.textContent = '0';
+                return;
+            }
+
+            // Filter out invalid items
+            const validCart = cart.filter(item => item && item.name && item.price);
+            if (validCart.length === 0) {
+                cartItemsDiv.innerHTML = '<div class="empty-cart-message">Your cart is empty</div>';
+                totalItemsSpan.textContent = '0';
+                totalAmountSpan.textContent = '0';
+                return;
+            }
+
+            // Display each cart item
+            validCart.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'cart-item';
+                itemDiv.innerHTML = `
+                    <div class="cart-item-image">
+                        <img src="${item.image}" alt="${item.name}" onerror="this.onerror=null; this.src='https://via.placeholder.com/80x80?text=No+Image'">
+                    </div>
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">₹${item.price}</div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn decrease" data-index="${index}">-</button>
+                            <span class="quantity-value">${item.quantity || 1}</span>
+                            <button class="quantity-btn increase" data-index="${index}">+</button>
+                        </div>
+                    </div>
+                    <button class="remove-item" data-index="${index}">×</button>
+                `;
+                cartItemsDiv.appendChild(itemDiv);
+                totalItems += (item.quantity || 1);
+                totalAmount += item.price * (item.quantity || 1);
+            });
+
+            totalItemsSpan.textContent = totalItems;
+            totalAmountSpan.textContent = totalAmount;
+
+            // Add quantity button functionality
+            document.querySelectorAll('.quantity-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    const currentItem = validCart[index];
+                    if (!currentItem) return;
+
+                    if (this.classList.contains('increase')) {
+                        CartManager.updateItem(index, (currentItem.quantity || 1) + 1);
+                    } else if (this.classList.contains('decrease')) {
+                        CartManager.updateItem(index, (currentItem.quantity || 1) - 1);
+                    }
+                    updateCartDisplay();
+                });
+            });
+
+            // Add remove functionality
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    CartManager.removeItem(index);
+                    updateCartDisplay();
+                });
+            });
+        }
+
+        // Add to cart function
+        function addToCart(button) {
+            // Check if user is logged in
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                showLocationMessage('Please login first to add items to cart', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+                return;
+            }
+
+            const itemDetails = {
+                id: Date.now() + Math.random().toString(36).substr(2, 9),
+                name: button.dataset.name,
+                price: parseInt(button.dataset.price),
+                image: button.dataset.img
+            };
+
+            CartManager.addItem(itemDetails);
+            showLocationMessage('Item added to cart successfully!', 'success');
+            updateCartDisplay();
+        }
+
+        // Show/hide order history link based on login status
+        function updateOrderHistoryLink() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const orderHistoryLink = document.getElementById('orderHistoryLink');
+            if (currentUser) {
+                orderHistoryLink.style.display = 'block';
+            } else {
+                orderHistoryLink.style.display = 'none';
+            }
+        }
+
+        // Function to load order history in home page
+        function loadHomeOrderHistory() {
+            const orderListDiv = document.querySelector('.order-list');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!currentUser) {
+                orderListDiv.innerHTML = `
+                    <div class="empty-history">
+                        <i class="fas fa-user-lock"></i>
+                        <h3>Please Login</h3>
+                        <p>You need to login to view your order history</p>
+                        <a href="login.html" class="back-to-home">Login Now</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+            const userOrders = orderHistory.filter(order => order.userId === currentUser.email);
+
+            if (userOrders.length === 0) {
+                orderListDiv.innerHTML = `
+                    <div class="empty-history">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h3>No Orders Yet</h3>
+                        <p>Your order history will appear here</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort orders by date (newest first)
+            userOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+
+            // Show only the 3 most recent orders
+            const recentOrders = userOrders.slice(0, 3);
+
+            orderListDiv.innerHTML = recentOrders.map(order => `
+                <div class="order-item" data-order-id="${order.orderId}">
+                    <div class="order-header">
+                        <div class="order-header-left">
+                            <div class="order-number">Order #${order.orderId}</div>
+                        </div>
+                        <div class="order-actions">
+                            <div class="order-date">${new Date(order.orderDate).toLocaleString()}</div>
+                            <button class="delete-order" onclick="deleteOrder('${order.orderId}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="order-items">
+                        ${order.items.map(item => `
+                            <div class="order-item-detail">
+                                <div class="order-item-info">
+                                    <div class="order-item-name">${item.name}</div>
+                                    <div class="order-item-quantity">Quantity: ${item.quantity}</div>
+                                </div>
+                                <div class="order-item-price">₹${item.price * item.quantity}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="order-total">
+                        <div class="payment-status ${order.paymentStatus === 'Paid' ? 'paid' : 'pending'}">
+                            ${order.paymentStatus}
+                        </div>
+                        <div>Total: ₹${order.totalAmount}</div>
+                    </div>
+                </div>
+            `).join('') + `
+                <div class="view-all-orders">
+                    <a href="order-history.html" class="view-all-btn">View All Orders</a>
+                </div>
+            `;
+        }
+
+        // Function to delete an order
+        function deleteOrder(orderId) {
+            if (confirm('Are you sure you want to delete this order?')) {
+                const orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+                const updatedOrderHistory = orderHistory.filter(order => order.orderId !== orderId);
+                localStorage.setItem('orderHistory', JSON.stringify(updatedOrderHistory));
+                loadHomeOrderHistory(); // Reload the order history display
+            }
+        }
+
+        // Add styles for the order history section
+        const style = document.createElement('style');
+        style.textContent = `
+            .order-history {
+                padding: 50px 20px;
+                background: #f9f9f9;
+            }
+
+            .order-history h2 {
+                text-align: center;
+                color: #8B4513;
+                margin-bottom: 30px;
+            }
+
+            .order-history-container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            .order-item {
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                margin-bottom: 20px;
+                overflow: hidden;
+            }
+
+            .order-header {
+                background: #f9f9f9;
+                padding: 15px 20px;
+                border-bottom: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .order-header-left {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .order-number {
+                font-weight: 600;
+                color: #8B4513;
+            }
+
+            .order-date {
+                color: #666;
+                font-size: 0.9em;
+            }
+
+            .order-items {
+                padding: 20px;
+            }
+
+            .order-item-detail {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                background: #f9f9f9;
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+
+            .order-item-name {
+                font-weight: 500;
+                color: #333;
+            }
+
+            .order-item-quantity {
+                color: #666;
+                font-size: 0.9em;
+            }
+
+            .order-item-price {
+                font-weight: 600;
+                color: #8B4513;
+            }
+
+            .order-total {
+                padding: 15px 20px;
+                background: #f9f9f9;
+                border-top: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .payment-status {
+                padding: 5px 15px;
+                border-radius: 20px;
+                font-size: 0.9em;
+                font-weight: 500;
+            }
+
+            .payment-status.paid {
+                background: #e8f5e9;
+                color: #4CAF50;
+            }
+
+            .payment-status.pending {
+                background: #fff3e0;
+                color: #ff9800;
+            }
+
+            .view-all-orders {
+                text-align: center;
+                margin-top: 30px;
+            }
+
+            .view-all-btn {
+                display: inline-block;
+                padding: 12px 25px;
+                background: #8B4513;
+                color: white;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+
+            .view-all-btn:hover {
+                background: #6B2C0F;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+            }
+
+            .empty-history {
+                text-align: center;
+                padding: 50px 20px;
+                color: #666;
+            }
+
+            .empty-history i {
+                font-size: 48px;
+                color: #ddd;
+                margin-bottom: 20px;
+            }
+
+            .order-actions {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .delete-order {
+                background: #ff4444;
+                color: white;
+                border: none;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+            }
+
+            .delete-order:hover {
+                background: #ff2222;
+                transform: scale(1.1);
+            }
+
+            .delete-order i {
+                font-size: 14px;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

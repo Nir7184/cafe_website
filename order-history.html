@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - Brew Bliss Café</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                        url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .history-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .history-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .history-header h1 {
+            color: #8B4513;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .order-header {
+            background: #f9f9f9;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-header h3 {
+            color: #8B4513;
+            margin: 0;
+            font-size: 1.2em;
+        }
+
+        .order-date {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .order-content {
+            padding: 20px;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            background: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .order-items {
+            margin-top: 20px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .item-details h4 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+
+        .item-meta {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .item-total {
+            font-weight: 600;
+            color: #8B4513;
+        }
+
+        .payment-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .payment-status.paid {
+            background: #e8f5e9;
+            color: #4CAF50;
+        }
+
+        .payment-status.pending {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 50px 20px;
+            color: #666;
+        }
+
+        .empty-history i {
+            font-size: 48px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .back-to-home {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #8B4513;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-home:hover {
+            background: #6B2C0F;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        .order-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .delete-order {
+            background: #ff4444;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .delete-order:hover {
+            background: #ff2222;
+            transform: scale(1.1);
+        }
+
+        .delete-order i {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="history-container">
+        <div class="history-header">
+            <h1>Order History</h1>
+            <p>View all your past orders</p>
+        </div>
+
+        <div id="orderHistory"></div>
+
+        <div style="text-align: center;">
+            <a href="index.html" class="back-to-home">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Function to format date
+        function formatDate(date) {
+            return new Date(date).toLocaleString('en-IN', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Function to load order history
+        function loadOrderHistory() {
+            const orderHistoryDiv = document.getElementById('orderHistory');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!currentUser) {
+                orderHistoryDiv.innerHTML = `
+                    <div class="empty-history">
+                        <i class="fas fa-user-lock"></i>
+                        <h3>Please Login</h3>
+                        <p>You need to login to view your order history</p>
+                        <a href="login.html" class="back-to-home">Login Now</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Get order history from localStorage
+            const orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+
+            // Filter orders for current user
+            const userOrders = orderHistory.filter(order => order.userId === currentUser.email);
+
+            if (userOrders.length === 0) {
+                orderHistoryDiv.innerHTML = `
+                    <div class="empty-history">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h3>No Orders Yet</h3>
+                        <p>Your order history will appear here</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort orders by date (newest first)
+            userOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+
+            orderHistoryDiv.innerHTML = userOrders.map(order => `
+                <div class="order-item" data-order-id="${order.orderId}">
+                    <div class="order-header">
+                        <h3>Order #${order.orderId}</h3>
+                        <span class="order-date">${formatDate(order.orderDate)}</span>
+                    </div>
+                    <div class="order-content">
+                        <div class="order-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Customer Name</div>
+                                <div class="detail-value">${order.customerName}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Contact Number</div>
+                                <div class="detail-value">${order.contactNumber}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Delivery Address</div>
+                                <div class="detail-value">${order.address}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Payment Method</div>
+                                <div class="detail-value">
+                                    ${order.paymentMethod === 'online' ? 'Online Payment' : 'Cash on Delivery'}
+                                    <span class="payment-status ${order.paymentStatus === 'Paid' ? 'paid' : 'pending'}">
+                                        ${order.paymentStatus}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-items">
+                            <h4>Order Items</h4>
+                            ${order.items.map(item => `
+                                <div class="order-item">
+                                    <div class="item-info">
+                                        <div class="item-details">
+                                            <h4>${item.name}</h4>
+                                            <div class="item-meta">
+                                                <p>Quantity: ${item.quantity}</p>
+                                                <p>Price: ₹${item.price}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item-total">
+                                        ₹${item.price * item.quantity}
+                                    </div>
+                                </div>
+                            `).join('')}
+                            <div class="order-item" style="background: #f0f0f0;">
+                                <div class="item-info">
+                                    <div class="item-details">
+                                        <h4>Total Amount</h4>
+                                    </div>
+                                </div>
+                                <div class="item-total">
+                                    ₹${order.totalAmount}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load order history when page loads
+        document.addEventListener('DOMContentLoaded', loadOrderHistory);
+    </script>
+</body>
+</html> 

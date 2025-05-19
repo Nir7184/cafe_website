@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Details - Brew Bliss Café</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                        url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .delivery-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .delivery-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .delivery-header h1 {
+            color: #8B4513;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .delivery-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #8B4513;
+            outline: none;
+            box-shadow: 0 0 5px rgba(139, 69, 19, 0.2);
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .order-details {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .order-details h3 {
+            color: #8B4513;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .item-info img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-details h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .item-meta {
+            display: flex;
+            gap: 20px;
+            color: #666;
+            font-size: 0.9em;
+            align-items: center;
+        }
+
+        .item-meta p {
+            margin: 0;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            background: #f0f0f0;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .quantity-value {
+            font-weight: 500;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .remove-item {
+            background: #ff4444;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .remove-item:hover {
+            background: #ff2222;
+        }
+
+        .item-total {
+            font-weight: 600;
+            color: #8B4513;
+            font-size: 1.1em;
+            min-width: 100px;
+            text-align: right;
+        }
+
+        .order-total {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            font-weight: bold;
+            text-align: right;
+            font-size: 1.2em;
+            color: #8B4513;
+        }
+
+        .payment-method {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f9f9f9;
+            border-radius: 12px;
+        }
+
+        .payment-method h3 {
+            color: #8B4513;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .payment-options {
+            display: flex;
+            gap: 30px;
+        }
+
+        .payment-options label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .payment-options input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #8B4513;
+        }
+
+        .confirm-order-btn {
+            position: relative;
+            overflow: hidden;
+            background: #8B4513;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .confirm-order-btn:hover {
+            background: #6B2C0F;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #8B4513;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: #6B2C0F;
+            transform: translateX(-5px);
+        }
+
+        .error-text {
+            display: none;
+            color: #ff4444;
+            font-size: 0.85em;
+            margin-top: 5px;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+        }
+
+        .form-group input:invalid,
+        .form-group textarea:invalid {
+            border-color: #ff4444;
+        }
+
+        .form-group input:valid,
+        .form-group textarea:valid {
+            border-color: #4CAF50;
+        }
+
+        .form-group input:focus:invalid,
+        .form-group textarea:focus:invalid {
+            border-color: #ff4444;
+            box-shadow: 0 0 5px rgba(255, 68, 68, 0.2);
+        }
+
+        .form-group input:focus:valid,
+        .form-group textarea:focus:valid {
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+        }
+
+        .form-group.error .error-text {
+            display: block;
+        }
+
+        .form-group.error input,
+        .form-group.error textarea {
+            border-color: #ff4444;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #4CAF50;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #ff4444;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .confirm-order-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .confirm-order-btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .item-info img {
+            width: 80px !important;
+            height: 80px !important;
+            object-fit: cover !important;
+            border-radius: 8px !important;
+            display: block !important;
+            margin-right: 15px !important;
+        }
+
+        .cart-item img {
+            width: 80px !important;
+            height: 80px !important;
+            object-fit: cover !important;
+            border-radius: 8px !important;
+            display: block !important;
+            margin-right: 15px !important;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Add these styles for Razorpay */
+        .razorpay-button {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .pay-button {
+            background: #8B4513;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .pay-button:hover {
+            background: #6B2C0F;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        .pay-button i {
+            font-size: 18px;
+        }
+
+        .processing-payment {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .processing-payment-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .processing-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #8B4513;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Add styles for mock payment form */
+        .mock-payment-form {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .pay-button {
+            background: #8B4513;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .pay-button:hover {
+            background: #6B2C0F;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        .pay-button i {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="delivery-container">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Menu
+        </a>
+        
+        <div class="delivery-header">
+            <h1>Delivery Details</h1>
+            <p>Please fill in your delivery information</p>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <form id="deliveryForm">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" required placeholder="Enter your full name" 
+                       pattern="[A-Za-z\s]{3,50}" 
+                       title="Please enter a valid name (3-50 characters, letters and spaces only)">
+                <small class="error-text">Name must be 3-50 characters long and contain only letters and spaces</small>
+            </div>
+            <div class="form-group">
+                <label for="address">Delivery Address</label>
+                <textarea id="address" required placeholder="Enter your complete delivery address including landmark" 
+                          minlength="20" maxlength="200"></textarea>
+                <small class="error-text">Please enter a complete address with at least 20 characters including landmark</small>
+            </div>
+            <div class="form-group">
+                <label for="contactNumber">Contact Number</label>
+                <input type="tel" id="contactNumber" required 
+                       pattern="[0-9]{10}" 
+                       title="Please enter a valid 10-digit mobile number"
+                       placeholder="Enter your 10-digit mobile number">
+                <small class="error-text">Please enter a valid 10-digit mobile number</small>
+            </div>
+
+            <div class="order-details">
+                <h3>Order Details</h3>
+                <div id="orderItems"></div>
+                <div class="order-total">
+                    <p>Total Amount: ₹<span id="totalAmount">0</span></p>
+                </div>
+            </div>
+
+            <div class="payment-method">
+                <h3>Payment Method</h3>
+                <div class="payment-options">
+                    <label>
+                        <input type="radio" name="payment" value="cod" checked>
+                        Cash on Delivery
+                    </label>
+                    <label>
+                        <input type="radio" name="payment" value="online">
+                        Online Payment
+                    </label>
+                </div>
+            </div>
+
+            <!-- Add mock payment form -->
+            <div id="mock-payment-form" class="mock-payment-form" style="display: none;">
+                <div class="form-group">
+                    <label for="cardNumber">Card Number</label>
+                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expiryDate">Expiry Date</label>
+                        <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5">
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" placeholder="123" maxlength="3">
+                    </div>
+                </div>
+                <button type="button" id="mock-pay-button" class="pay-button">
+                    <i class="fas fa-credit-card"></i> Pay Now
+                </button>
+            </div>
+
+            <button type="submit" class="confirm-order-btn">Confirm Order</button>
+        </form>
+    </div>
+
+    <script>
+        // Check if user is logged in and handle redirect
+        function checkLogin() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                // Store the current page URL in localStorage before redirecting
+                localStorage.setItem('redirectAfterLogin', window.location.href);
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Global cart management with dual storage
+        const CartManager = {
+            getCart: function() {
+                try {
+                    // Try sessionStorage first
+                    let cartData = sessionStorage.getItem('cart');
+                    if (!cartData) {
+                        // If not in sessionStorage, try localStorage
+                        cartData = localStorage.getItem('cart');
+                        if (cartData) {
+                            // If found in localStorage, copy to sessionStorage
+                            sessionStorage.setItem('cart', cartData);
+                        }
+                    }
+                    return cartData ? JSON.parse(cartData) : [];
+                } catch (error) {
+                    console.error('Error getting cart:', error);
+                    return [];
+                }
+            },
+
+            saveCart: function(cart) {
+                try {
+                    // Save to both storages
+                    const cartData = JSON.stringify(cart);
+                    sessionStorage.setItem('cart', cartData);
+                    localStorage.setItem('cart', cartData);
+                    return true;
+                } catch (error) {
+                    console.error('Error saving cart:', error);
+                    return false;
+                }
+            },
+
+            updateItem: function(index, quantity) {
+                const cart = this.getCart();
+                if (cart[index]) {
+                    if (quantity <= 0) {
+                        cart.splice(index, 1);
+                    } else {
+                        cart[index].quantity = quantity;
+                    }
+                    this.saveCart(cart);
+                }
+                return cart;
+            },
+
+            clearCart: function() {
+                localStorage.removeItem('cart');
+                sessionStorage.removeItem('cart');
+            }
+        };
+
+        // Enhanced form validation
+        function validateForm() {
+            const fullName = document.getElementById('fullName');
+            const address = document.getElementById('address');
+            const contactNumber = document.getElementById('contactNumber');
+            let isValid = true;
+
+            // Reset previous error states
+            document.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('error');
+            });
+
+            // Validate name
+            if (!fullName.value.match(/^[A-Za-z\s]{3,50}$/)) {
+                fullName.parentElement.classList.add('error');
+                isValid = false;
+            }
+
+            // Validate address
+            if (address.value.length < 20) {
+                address.parentElement.classList.add('error');
+                isValid = false;
+            }
+
+            // Validate contact number
+            if (!contactNumber.value.match(/^[0-9]{10}$/)) {
+                contactNumber.parentElement.classList.add('error');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                localStorage.setItem('redirectAfterLogin', window.location.href);
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Clear any previously saved form data when page loads
+            localStorage.removeItem('deliveryFormData');
+
+            // Load cart items immediately
+            loadCartItems();
+
+            // Add event listener for page visibility
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'visible') {
+                    loadCartItems();
+                }
+            });
+
+            // Add input event listeners to save form data as user types
+            document.querySelectorAll('#deliveryForm input, #deliveryForm textarea').forEach(input => {
+                input.addEventListener('input', function() {
+                    validateForm();
+                });
+            });
+        });
+
+        // Load cart items and calculate total
+        function loadCartItems() {
+            const cart = CartManager.getCart();
+            const orderItemsDiv = document.getElementById('orderItems');
+            let total = 0;
+
+            // Clear previous items
+            orderItemsDiv.innerHTML = '';
+
+            // Validate cart data
+            if (!Array.isArray(cart) || cart.length === 0) {
+                document.getElementById('errorMessage').textContent = 'Your cart is empty!';
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('totalAmount').textContent = '0';
+                return;
+            }
+
+            // Filter out invalid items
+            const validCart = cart.filter(item => item && item.name && item.price);
+            if (validCart.length === 0) {
+                document.getElementById('errorMessage').textContent = 'Your cart is empty!';
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('totalAmount').textContent = '0';
+                return;
+            }
+
+            // Hide error message if cart has valid items
+            document.getElementById('errorMessage').style.display = 'none';
+
+            // Display each cart item
+            validCart.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'order-item';
+                itemDiv.innerHTML = `
+                    <div class="item-info">
+                        <div class="item-details">
+                            <h4>${item.name}</h4>
+                            <div class="item-meta">
+                                <p>Price: ₹${item.price}</p>
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn decrease" data-index="${index}">-</button>
+                                    <span class="quantity-value">${item.quantity || 1}</span>
+                                    <button class="quantity-btn increase" data-index="${index}">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-total">
+                        <p>₹${item.price * (item.quantity || 1)}</p>
+                    </div>
+                `;
+                orderItemsDiv.appendChild(itemDiv);
+                total += item.price * (item.quantity || 1);
+            });
+
+            // Update total amount
+            document.getElementById('totalAmount').textContent = total;
+
+            // Add quantity button functionality
+            document.querySelectorAll('.quantity-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    const currentItem = validCart[index];
+                    if (!currentItem) return;
+
+                    if (this.classList.contains('increase')) {
+                        CartManager.updateItem(index, (currentItem.quantity || 1) + 1);
+                    } else if (this.classList.contains('decrease')) {
+                        CartManager.updateItem(index, (currentItem.quantity || 1) - 1);
+                    }
+                    loadCartItems();
+                });
+            });
+        }
+
+        // Show/hide mock payment form based on payment method
+        document.querySelectorAll('input[name="payment"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const mockPaymentForm = document.getElementById('mock-payment-form');
+                if (this.value === 'online') {
+                    mockPaymentForm.style.display = 'block';
+                } else {
+                    mockPaymentForm.style.display = 'none';
+                }
+            });
+        });
+
+        // Format card number input
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            let formattedValue = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formattedValue += ' ';
+                }
+                formattedValue += value[i];
+            }
+            e.target.value = formattedValue;
+        });
+
+        // Format expiry date input
+        document.getElementById('expiryDate').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2);
+            }
+            e.target.value = value;
+        });
+
+        // Format CVV input
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+        });
+
+        // Handle mock payment
+        document.getElementById('mock-pay-button').addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            // Clear previous messages
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            if (!checkLogin()) {
+                return;
+            }
+            
+            const cart = CartManager.getCart();
+            const validCart = cart.filter(item => item && item.name && item.price);
+            
+            if (!Array.isArray(validCart) || validCart.length === 0) {
+                document.getElementById('errorMessage').textContent = 'Your cart is empty!';
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+
+            if (!validateForm()) {
+                document.getElementById('errorMessage').textContent = 'Please fill in all fields correctly';
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+
+            // Validate payment details
+            const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+
+            if (cardNumber.length !== 16) {
+                document.getElementById('errorMessage').textContent = 'Please enter a valid 16-digit card number';
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+
+            if (!expiryDate.match(/^\d{2}\/\d{2}$/)) {
+                document.getElementById('errorMessage').textContent = 'Please enter a valid expiry date (MM/YY)';
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+
+            if (cvv.length !== 3) {
+                document.getElementById('errorMessage').textContent = 'Please enter a valid 3-digit CVV';
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+
+            // Disable button to prevent multiple clicks
+            this.disabled = true;
+
+            // Show processing overlay
+            const processingOverlay = document.getElementById('processingPayment');
+            processingOverlay.style.display = 'flex';
+
+            try {
+                // Simulate payment processing
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Show success message
+                document.getElementById('successMessage').textContent = 'Payment successful! Processing your order...';
+                document.getElementById('successMessage').style.display = 'block';
+
+                // Complete the order
+                completeOrder();
+            } catch (error) {
+                console.error('Payment error:', error);
+                document.getElementById('errorMessage').textContent = 'An error occurred. Please try again.';
+                document.getElementById('errorMessage').style.display = 'block';
+            } finally {
+                // Hide processing overlay and re-enable button
+                processingOverlay.style.display = 'none';
+                this.disabled = false;
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('deliveryForm').onsubmit = async function(e) {
+            e.preventDefault();
+            
+            if (!checkLogin()) {
+                return;
+            }
+            
+            const cart = CartManager.getCart();
+            const validCart = cart.filter(item => item && item.name && item.price);
+            
+            if (!Array.isArray(validCart) || validCart.length === 0) {
+                document.getElementById('errorMessage').textContent = 'Your cart is empty!';
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+
+            if (!validateForm()) {
+                document.getElementById('errorMessage').textContent = 'Please fill in all fields correctly';
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+            const submitButton = document.querySelector('.confirm-order-btn');
+            const processingOverlay = document.getElementById('processingPayment');
+
+            if (paymentMethod === 'online') {
+                // For online payment, show the mock payment form
+                document.getElementById('mock-payment-form').style.display = 'block';
+                // Don't proceed with order completion here
+                return;
+            } else {
+                // Cash on delivery
+                completeOrder();
+            }
+        };
+
+        // Function to complete the order
+        function completeOrder() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                alert('Please login to place an order');
+                return;
+            }
+
+            const cart = CartManager.getCart();
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+
+            // Create order details with all necessary information
+            const orderDetails = {
+                orderId: 'ORD' + Date.now(),
+                customerName: document.getElementById('fullName').value,
+                address: document.getElementById('address').value,
+                contactNumber: document.getElementById('contactNumber').value,
+                items: cart.map(item => ({
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity || 1,
+                    image: item.image
+                })),
+                paymentMethod: document.querySelector('input[name="payment"]:checked').value === 'online' ? 'Online Payment' : 'Cash on Delivery',
+                paymentStatus: document.querySelector('input[name="payment"]:checked').value === 'online' ? 'Paid' : 'Pending',
+                totalAmount: document.getElementById('totalAmount').textContent,
+                orderDate: new Date().toISOString(),
+                userId: currentUser.email
+            };
+
+            // Get existing order history or initialize empty array
+            let orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+            
+            // Add new order to history
+            orderHistory.push(orderDetails);
+            
+            // Save updated order history
+            localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+
+            // Clear cart after successful order
+            CartManager.clearCart();
+
+            // Show success message
+            document.getElementById('successMessage').textContent = 'Order placed successfully! Redirecting...';
+            document.getElementById('successMessage').style.display = 'block';
+
+            // Hide processing overlay if it's visible
+            document.getElementById('processingPayment').style.display = 'none';
+
+            // Redirect to confirmation page after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'order-confirmation.html';
+            }, 2000);
+        }
+    </script>
+
+    <!-- Add processing overlay -->
+    <div id="processingPayment" class="processing-payment">
+        <div class="processing-payment-content">
+            <div class="processing-spinner"></div>
+            <h3>Processing Payment</h3>
+            <p>Please wait while we process your payment...</p>
+        </div>
+    </div>
+</body>
+</html> 
